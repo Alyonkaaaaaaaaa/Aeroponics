@@ -1,0 +1,31 @@
+#include <Arduino.h>
+
+const int PUMP_PIN = 25;                 
+const unsigned long ON_TIME  = 5000UL;   // 5 секунд работы
+const unsigned long PERIOD   = 180000UL; // 3 минуты = 180 000 мс
+
+bool pumpOn = false;
+unsigned long lastOnTime = 0;           
+
+void setup() {
+  pinMode(PUMP_PIN, OUTPUT);
+  digitalWrite(PUMP_PIN, LOW);          
+  lastOnTime = millis();                 
+}
+
+void loop() {
+  unsigned long now = millis();
+
+  if (pumpOn) {
+    if (now - lastOnTime >= ON_TIME) {
+      digitalWrite(PUMP_PIN, LOW);
+      pumpOn = false;
+    }
+  } else {
+    if (now - lastOnTime >= PERIOD) {
+      digitalWrite(PUMP_PIN, HIGH);
+      pumpOn = true;
+      lastOnTime = now;                  
+    }
+  }
+}
